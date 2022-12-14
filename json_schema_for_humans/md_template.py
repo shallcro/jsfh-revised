@@ -161,24 +161,27 @@ def array_items_restrictions(schema: SchemaNode) -> List[List[str]]:
     Tuple validation restrictions
     ready to be rendered by generate_table filter
     """
-    if not schema.array_items_def and not schema.tuple_validation_items:
-        return []
 
-    items_restriction_rules = (
-        [schema.array_items_def] if schema.array_items_def else []
-    ) + schema.tuple_validation_items
-    items_restrictions = [["Each item of this array must be", "Description"]]
-    for i, item in enumerate(items_restriction_rules):
-        item_label = item.name_for_breadcrumbs or f"Array Item {i}"
-        item_html_id = item.html_id
-        items_restrictions.append(
-            [
-                f"[{item_label}](#{item_html_id})",
-                escape_for_table(first_line_fixed(item.description or "-", const.LINE_WIDTH)),
-            ]
-        )
+    return []
 
-    return items_restrictions
+    # if not schema.array_items_def and not schema.tuple_validation_items:
+    #     return []
+
+    # items_restriction_rules = (
+    #     [schema.array_items_def] if schema.array_items_def else []
+    # ) + schema.tuple_validation_items
+    # items_restrictions = [["Each item of this array must be", "Description"]]
+    # for i, item in enumerate(items_restriction_rules):
+    #     item_label = item.name_for_breadcrumbs or f"Array Item {i}"
+    #     item_html_id = item.html_id
+    #     items_restrictions.append(
+    #         [
+    #             f"[{item_label}](#{item_html_id})",
+    #             escape_for_table(first_line_fixed(item.description or "-", const.LINE_WIDTH)),
+    #         ]
+    #     )
+
+    # return items_restrictions
 
 
 class MarkdownTemplate(object):
