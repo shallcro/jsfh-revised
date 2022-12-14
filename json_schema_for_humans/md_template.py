@@ -326,29 +326,13 @@ class MarkdownTemplate(object):
         for sub_property in schema.iterate_properties:
             line: List[str] = []
             # property name
-            property_name = "+ " if sub_property.is_required_property else "- "
+            property_name = "(R) " if sub_property.is_required_property else "(O) "
             property_name += self.format_link(escape_for_table(sub_property.property_name), sub_property.html_id)
             line.append(property_name)
-            # pattern
-            line.append("Yes" if sub_property.is_pattern_property else "No")
             # type
             line.append(
                 "Combination" if jinja_filters.is_combining(sub_property) else escape_for_table(sub_property.type_name)
-            )
-            # Deprecated
-            line.append(
-                self.badge("Deprecated", "red") if jinja_filters.deprecated(self.config, sub_property) else "No"
-            )
-            # Link
-            if sub_property.should_be_a_link(self.config):
-                line.append(
-                    "Same as " + self.format_link(sub_property.links_to.link_name, sub_property.links_to.html_id)
-                )
-            elif sub_property.refers_to:
-                line.append("In " + sub_property.ref_path)
-            else:
-                line.append("-")
-
+            ) 
             # title or description
             description = sub_property.description or "-"
             if sub_property.title:
@@ -360,7 +344,7 @@ class MarkdownTemplate(object):
 
         if properties:
             # add header
-            properties.insert(0, ["Property", "Pattern", "Type", "Deprecated", "Definition", "Title/Description"])
+            properties.insert(0, ["Property", "Type", "Description"])
 
         return properties
 
@@ -439,24 +423,10 @@ class MarkdownTemplate(object):
         if not self.config.template_md_options.get("show_array_restrictions"):
             return []
 
-        return [
-            ["", "Array restrictions"],
-            ["**Min items**", str(schema.kw_min_items.literal) if schema.kw_min_items else "N/A"],
-            ["**Max items**", str(schema.kw_max_items.literal) if schema.kw_max_items else "N/A"],
-            [
-                "**Items unicity**",
-                "True" if schema.kw_unique_items and schema.kw_unique_items.literal is True else "False",
-            ],
-            [
-                "**Additional items**",
-                "True" if schema.kw_additional_items and schema.kw_additional_items.literal is True else "False",
-            ],
-            [
-                "**Tuple validation**",
-                "See below"
-                if schema.array_items_def
-                or schema.tuple_validation_items
-                or (schema.kw_contains and schema.kw_contains.literal != {})
-                else "N/A",
-            ],
-        ]
+        if not schema.kw_min_items:
+            return []
+        else:
+            return [
+                ["", "Array restrictions"],
+                ["**Min items**", str(schema.kw_min_items.literal)]
+            ]
