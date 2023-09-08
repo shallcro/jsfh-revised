@@ -329,17 +329,23 @@ class MarkdownTemplate(object):
         for sub_property in schema.iterate_properties:
             line: List[str] = []
             # property name
-            property_name = "(R) " if sub_property.is_required_property else "(O) "
+            #property_name = "(R) " if sub_property.is_required_property else "(O) "
             property_name += self.format_link(escape_for_table(sub_property.property_name), sub_property.html_id)
             line.append(property_name)
+            #required?
+            if sub_property.is_required_property:
+                line.append('Yes')
+            else:
+                line.append('No')
+
             # type
             line.append(
                 "Combination" if jinja_filters.is_combining(sub_property) else escape_for_table(sub_property.type_name)
             ) 
             # title or description
             description = sub_property.description or "-"
-            if sub_property.title:
-                description = sub_property.title
+            # if sub_property.title:
+            #     description = sub_property.title
 
             line.append(escape_for_table(description))
 
@@ -347,7 +353,7 @@ class MarkdownTemplate(object):
 
         if properties:
             # add header
-            properties.insert(0, ["Property", "Type", "Description"])
+            properties.insert(0, ["Property", "Required?", "Type", "Description"])
 
         return properties
 
