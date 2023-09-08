@@ -330,7 +330,7 @@ class MarkdownTemplate(object):
             line: List[str] = []
             # property name
             #property_name = "(R) " if sub_property.is_required_property else "(O) "
-            property_name += self.format_link(escape_for_table(sub_property.property_name), sub_property.html_id)
+            property_name = self.format_link(escape_for_table(sub_property.property_name), sub_property.html_id)
             line.append(property_name)
             #required?
             if sub_property.is_required_property:
