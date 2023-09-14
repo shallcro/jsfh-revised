@@ -338,6 +338,12 @@ class MarkdownTemplate(object):
             else:
                 line.append('No')
 
+            #repeatable
+            if 'array' in sub_property.type_name:
+                line.append('Yes')
+            else:
+                line.append('No')
+
             # type
             line.append(
                 "Combination" if jinja_filters.is_combining(sub_property) else escape_for_table(sub_property.type_name)
@@ -353,7 +359,7 @@ class MarkdownTemplate(object):
 
         if properties:
             # add header
-            properties.insert(0, ["Property", "Required?", "Type", "Description"])
+            properties.insert(0, ["Property", "Required?", "Repeatable?", "Accepted Values", "Description"])
 
         return properties
 
